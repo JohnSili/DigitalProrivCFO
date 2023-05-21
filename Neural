@@ -9,21 +9,25 @@ df['t'] = df['t'].fillna(0)
 y = df[["x1"]]
 x = df[["ego_id", "u", "v", "t", "x2", "x3"]]
 data = np.array(x)
+
 # Вычисляем среднее значение и стандартное отклонение для каждого признака
 mean = np.mean(data, axis=0)
 std = np.std(data, axis=0)
 # Стандартизируем данные
 x = (data - mean) / std
 x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2,random_state=42)
+
+#список для динамического шага в зависимости от номера графа, считаем номер графа, потом переводим все это в список
 counts = df['ego_id'].value_counts()
 step_d = counts.sort_index()
-step_d = step_d.tolist()
+step_d = step_d.tolist() 
+
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 # создание модели
 model = Sequential()
 # добавление LSTM слоя
-model.add(LSTM(units=64, input_shape=(3, 1)))
+model.add(LSTM(units=64, input_shape=(6, 1)))
 # добавление выходного слоя
 model.add(Dense(units=4, activation='sigmoid'))
 # компиляция модели
